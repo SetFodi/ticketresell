@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { isValidPhone } from '@/lib/utils'
-import { Phone, Key, Loader2, ArrowLeft, CheckCircle } from 'lucide-react'
+import { Phone, Key, Loader2, ArrowLeft, Ticket, Sparkles } from 'lucide-react'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -20,14 +20,12 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null)
   const [countdown, setCountdown] = useState(0)
 
-  // Redirect if already logged in
   useEffect(() => {
     if (user && !authLoading) {
       router.push('/profile')
     }
   }, [user, authLoading, router])
 
-  // Countdown timer for resend
   useEffect(() => {
     if (countdown > 0) {
       const timer = setTimeout(() => setCountdown(countdown - 1), 1000)
@@ -100,10 +98,8 @@ export default function LoginPage() {
   }
 
   const formatPhoneInput = (value: string) => {
-    // Remove all non-digits except the leading +
     let cleaned = value.replace(/[^\d+]/g, '')
 
-    // Ensure it starts with +995
     if (!cleaned.startsWith('+995')) {
       if (cleaned.startsWith('995')) {
         cleaned = '+' + cleaned
@@ -114,12 +110,10 @@ export default function LoginPage() {
       }
     }
 
-    // Limit to +995 + 9 digits
     if (cleaned.length > 13) {
       cleaned = cleaned.substring(0, 13)
     }
 
-    // Format: +995 XXX XXX XXX
     if (cleaned.length > 4) {
       let formatted = cleaned.substring(0, 4)
       const rest = cleaned.substring(4)
@@ -136,52 +130,71 @@ export default function LoginPage() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-zinc-50 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-[#c4f135]" />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Background effects */}
+      <div className="absolute inset-0 mesh-gradient" />
+      <div className="absolute inset-0 hero-grid opacity-30" />
+
+      {/* Glow orbs */}
+      <div className="glow-orb glow-orb-lime w-[400px] h-[400px] -top-32 -left-32" />
+      <div className="glow-orb glow-orb-cyan w-[300px] h-[300px] bottom-0 right-0" />
+
+      <div className="w-full max-w-md relative">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-zinc-600 hover:text-zinc-900 mb-6"
+          className="inline-flex items-center gap-2 text-zinc-500 hover:text-white mb-8 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           მთავარზე დაბრუნება
         </Link>
 
-        <div className="card p-6 md:p-8">
+        <div className="card p-8 relative overflow-hidden">
+          {/* Card glow effect */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-[#c4f135]/20 rounded-full blur-[80px]" />
+
           {step === 'phone' ? (
-            <>
+            <div className="relative">
               <div className="text-center mb-8">
-                <div className="w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <Phone className="w-8 h-8 text-primary-600" />
+                {/* Animated logo */}
+                <div className="relative w-20 h-20 mx-auto mb-6">
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#c4f135] to-[#00f5d4] animate-pulse-glow" />
+                  <div className="relative w-full h-full rounded-2xl bg-gradient-to-br from-[#c4f135] to-[#9bc22a] flex items-center justify-center">
+                    <Ticket className="w-10 h-10 text-[#050507]" />
+                  </div>
                 </div>
-                <h1 className="text-2xl font-bold text-zinc-900 mb-2">
+
+                <h1 className="text-2xl font-bold text-white mb-2">
                   {t('auth.login_title')}
                 </h1>
-                <p className="text-zinc-500">
+                <p className="text-zinc-400">
                   {t('auth.login_subtitle')}
                 </p>
               </div>
 
               <form onSubmit={handleSendOtp} className="space-y-4">
                 <div>
-                  <label className="label">{t('auth.phone')}</label>
+                  <label className="label flex items-center gap-2">
+                    <Phone className="w-4 h-4 text-[#c4f135]" />
+                    {t('auth.phone')}
+                  </label>
                   <input
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(formatPhoneInput(e.target.value))}
-                    className="input text-center text-lg tracking-wider"
+                    className="input text-center text-lg tracking-wider font-mono"
                     placeholder={t('auth.phone_placeholder')}
                   />
                 </div>
 
                 {error && (
-                  <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+                  <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-sm text-red-400">
                     {error}
                   </div>
                 )}
@@ -189,7 +202,7 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="btn btn-primary w-full justify-center py-3"
+                  className="btn btn-primary w-full justify-center py-3.5"
                 >
                   {loading ? (
                     <Loader2 className="w-5 h-5 animate-spin" />
@@ -199,43 +212,47 @@ export default function LoginPage() {
                 </button>
               </form>
 
-              <p className="text-xs text-zinc-500 text-center mt-6">
+              <p className="text-xs text-zinc-600 text-center mt-8">
                 გაგრძელებით თქვენ ეთანხმებით ჩვენს{' '}
-                <a href="/terms" className="text-primary-600 hover:underline">
+                <a href="/terms" className="text-[#c4f135] hover:underline">
                   წესებსა და პირობებს
                 </a>
               </p>
-            </>
+            </div>
           ) : (
-            <>
+            <div className="relative">
               <div className="text-center mb-8">
-                <div className="w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <Key className="w-8 h-8 text-primary-600" />
+                <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[#00f5d4]/20 to-[#00f5d4]/5 border border-[#00f5d4]/20 flex items-center justify-center">
+                  <Key className="w-10 h-10 text-[#00f5d4]" />
                 </div>
-                <h1 className="text-2xl font-bold text-zinc-900 mb-2">
+
+                <h1 className="text-2xl font-bold text-white mb-2">
                   კოდის დადასტურება
                 </h1>
-                <p className="text-zinc-500">
+                <p className="text-zinc-400">
                   {t('auth.otp_sent')}
                 </p>
-                <p className="text-sm text-zinc-700 font-medium mt-2">{phone}</p>
+                <p className="text-sm text-[#c4f135] font-medium mt-2">{phone}</p>
               </div>
 
               <form onSubmit={handleVerifyOtp} className="space-y-4">
                 <div>
-                  <label className="label">{t('auth.otp')}</label>
+                  <label className="label flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-[#00f5d4]" />
+                    {t('auth.otp')}
+                  </label>
                   <input
                     type="text"
                     value={otp}
                     onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                    className="input text-center text-2xl tracking-[0.5em] font-mono"
+                    className="input text-center text-3xl tracking-[0.5em] font-mono"
                     placeholder="000000"
                     autoFocus
                   />
                 </div>
 
                 {error && (
-                  <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+                  <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-sm text-red-400">
                     {error}
                   </div>
                 )}
@@ -243,7 +260,7 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={loading || otp.length !== 6}
-                  className="btn btn-primary w-full justify-center py-3"
+                  className="btn btn-primary w-full justify-center py-3.5"
                 >
                   {loading ? (
                     <Loader2 className="w-5 h-5 animate-spin" />
@@ -253,31 +270,31 @@ export default function LoginPage() {
                 </button>
               </form>
 
-              <div className="mt-6 text-center">
+              <div className="mt-6 text-center space-y-3">
                 <button
                   onClick={() => setStep('phone')}
-                  className="text-sm text-zinc-600 hover:text-zinc-900"
+                  className="text-sm text-zinc-500 hover:text-white transition-colors"
                 >
                   ← ნომრის შეცვლა
                 </button>
-              </div>
 
-              <div className="mt-4 text-center">
-                {countdown > 0 ? (
-                  <p className="text-sm text-zinc-500">
-                    ხელახლა გაგზავნა {countdown} წამში
-                  </p>
-                ) : (
-                  <button
-                    onClick={handleResendOtp}
-                    disabled={loading}
-                    className="text-sm text-primary-600 hover:underline"
-                  >
-                    კოდის ხელახლა გაგზავნა
-                  </button>
-                )}
+                <div>
+                  {countdown > 0 ? (
+                    <p className="text-sm text-zinc-600">
+                      ხელახლა გაგზავნა <span className="text-[#c4f135] font-mono">{countdown}</span> წამში
+                    </p>
+                  ) : (
+                    <button
+                      onClick={handleResendOtp}
+                      disabled={loading}
+                      className="text-sm text-[#c4f135] hover:underline"
+                    >
+                      კოდის ხელახლა გაგზავნა
+                    </button>
+                  )}
+                </div>
               </div>
-            </>
+            </div>
           )}
         </div>
       </div>

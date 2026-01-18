@@ -18,6 +18,8 @@ import {
   Loader2,
   AlertCircle,
   CheckCircle,
+  Sparkles,
+  ArrowRight,
 } from 'lucide-react'
 
 export default function SellPage() {
@@ -149,148 +151,184 @@ export default function SellPage() {
   // Redirect to login if not authenticated
   if (!user) {
     return (
-      <div className="min-h-screen bg-zinc-50 flex items-center justify-center p-4">
-        <div className="card p-8 max-w-md w-full text-center">
-          <AlertCircle className="w-12 h-12 text-zinc-400 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-zinc-900 mb-2">
+      <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+        <div className="absolute inset-0 mesh-gradient" />
+        <div className="glow-orb glow-orb-lime w-[300px] h-[300px] top-0 right-0" />
+
+        <div className="card p-8 max-w-md w-full text-center relative">
+          <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-6">
+            <AlertCircle className="w-8 h-8 text-zinc-500" />
+          </div>
+          <h2 className="text-xl font-bold text-white mb-2">
             შესვლა საჭიროა
           </h2>
-          <p className="text-zinc-500 mb-6">
+          <p className="text-zinc-400 mb-6">
             ბილეთის გასაყიდად გთხოვთ შეხვიდეთ ანგარიშზე
           </p>
           <Link href="/login" className="btn btn-primary">
             შესვლა
+            <ArrowRight className="w-4 h-4 ml-2" />
           </Link>
         </div>
       </div>
     )
   }
 
-  // Show verification prompt if not verified (optional for MVP)
-  // if (!user.is_verified_seller) { ... }
-
   if (success) {
     return (
-      <div className="min-h-screen bg-zinc-50 flex items-center justify-center p-4">
-        <div className="card p-8 max-w-md w-full text-center animate-fade-in">
-          <CheckCircle className="w-16 h-16 text-primary-600 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-zinc-900 mb-2">
-            {t('sell.success')}
-          </h2>
-          <p className="text-zinc-500">
-            გადამისამართება...
-          </p>
+      <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+        <div className="absolute inset-0 mesh-gradient" />
+        <div className="glow-orb glow-orb-lime w-[400px] h-[400px] -top-32 left-1/2 -translate-x-1/2" />
+
+        <div className="card p-8 max-w-md w-full text-center animate-fade-in relative overflow-hidden">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-[#c4f135]/20 rounded-full blur-[60px]" />
+
+          <div className="relative">
+            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#c4f135] to-[#9bc22a] flex items-center justify-center mx-auto mb-6">
+              <CheckCircle className="w-10 h-10 text-[#050507]" />
+            </div>
+            <h2 className="text-2xl font-bold text-white mb-2">
+              {t('sell.success')}
+            </h2>
+            <p className="text-zinc-400">
+              გადამისამართება...
+            </p>
+          </div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 py-8 md:py-12">
-      <div className="container max-w-2xl">
-        <div className="card p-6 md:p-8">
-          <div className="mb-8">
-            <h1 className="text-2xl md:text-3xl font-bold text-zinc-900 mb-2">
-              {t('sell.title')}
-            </h1>
-            <p className="text-zinc-500">
-              {t('sell.subtitle')}
-            </p>
+    <div className="min-h-screen py-8 md:py-12 relative">
+      {/* Background effects */}
+      <div className="absolute inset-0 mesh-gradient" />
+      <div className="absolute inset-0 hero-grid opacity-20" />
+
+      {/* Glow orbs */}
+      <div className="glow-orb glow-orb-lime w-[400px] h-[400px] -top-32 -left-32" />
+      <div className="glow-orb glow-orb-cyan w-[300px] h-[300px] bottom-0 right-0" />
+
+      <div className="container max-w-2xl relative">
+        <div className="card p-6 md:p-8 relative overflow-hidden">
+          {/* Card glow */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-[#c4f135]/10 rounded-full blur-[60px]" />
+
+          <div className="mb-8 relative">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#c4f135] to-[#9bc22a] flex items-center justify-center">
+                <Ticket className="w-6 h-6 text-[#050507]" />
+              </div>
+              <div>
+                <h1 className="text-2xl md:text-3xl font-bold text-white">
+                  {t('sell.title')}
+                </h1>
+                <p className="text-zinc-400 text-sm">
+                  {t('sell.subtitle')}
+                </p>
+              </div>
+            </div>
           </div>
 
           {error && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
-              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
-              <span className="text-red-700">{error}</span>
+            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center gap-3">
+              <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
+              <span className="text-red-400">{error}</span>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6 relative">
             {/* Event Name */}
             <div>
-              <label className="label">{t('sell.form.event_name')} *</label>
-              <div className="relative">
-                <Ticket className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
-                <input
-                  type="text"
-                  name="event_name"
-                  value={formData.event_name}
-                  onChange={handleChange}
-                  className="input pl-10"
-                  placeholder="მაგ: ბასიანი - გაზაფხულის წვეულება"
-                  required
-                />
-              </div>
+              <label className="label flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-[#c4f135]" />
+                {t('sell.form.event_name')} *
+              </label>
+              <input
+                type="text"
+                name="event_name"
+                value={formData.event_name}
+                onChange={handleChange}
+                className="input"
+                placeholder="მაგ: ბასიანი - გაზაფხულის წვეულება"
+                required
+              />
             </div>
 
             {/* Event Date & Venue */}
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
-                <label className="label">{t('sell.form.event_date')} *</label>
-                <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
-                  <input
-                    type="datetime-local"
-                    name="event_date"
-                    value={formData.event_date}
-                    onChange={handleChange}
-                    className="input pl-10"
-                    required
-                  />
-                </div>
+                <label className="label flex items-center gap-2">
+                  <Calendar className="w-4 h-4 text-[#00f5d4]" />
+                  {t('sell.form.event_date')} *
+                </label>
+                <input
+                  type="datetime-local"
+                  name="event_date"
+                  value={formData.event_date}
+                  onChange={handleChange}
+                  className="input"
+                  required
+                />
               </div>
 
               <div>
-                <label className="label">{t('sell.form.venue')} *</label>
-                <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
-                  <input
-                    type="text"
-                    name="venue"
-                    value={formData.venue}
-                    onChange={handleChange}
-                    className="input pl-10"
-                    placeholder="მაგ: ბასიანი, თბილისი"
-                    required
-                  />
-                </div>
+                <label className="label flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-[#ff6b9d]" />
+                  {t('sell.form.venue')} *
+                </label>
+                <input
+                  type="text"
+                  name="venue"
+                  value={formData.venue}
+                  onChange={handleChange}
+                  className="input"
+                  placeholder="მაგ: ბასიანი, თბილისი"
+                  required
+                />
               </div>
             </div>
 
             {/* Prices */}
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
-                <label className="label">{t('sell.form.original_price')}</label>
+                <label className="label flex items-center gap-2">
+                  <DollarSign className="w-4 h-4 text-zinc-500" />
+                  {t('sell.form.original_price')}
+                </label>
                 <div className="relative">
-                  <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
                   <input
                     type="number"
                     name="original_price"
                     value={formData.original_price || ''}
                     onChange={handleChange}
-                    className="input pl-10"
+                    className="input pr-10"
                     placeholder="0"
                     min="0"
                     step="0.01"
                   />
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500">₾</span>
                 </div>
               </div>
 
               <div>
-                <label className="label">{t('sell.form.asking_price')} *</label>
+                <label className="label flex items-center gap-2">
+                  <DollarSign className="w-4 h-4 text-[#c4f135]" />
+                  {t('sell.form.asking_price')} *
+                </label>
                 <div className="relative">
-                  <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
                   <input
                     type="number"
                     name="asking_price"
                     value={formData.asking_price || ''}
                     onChange={handleChange}
-                    className="input pl-10"
+                    className="input pr-10"
                     placeholder="0"
                     min="0"
                     step="0.01"
                     required
                   />
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500">₾</span>
                 </div>
               </div>
             </div>
@@ -312,35 +350,35 @@ export default function SellPage() {
               </div>
 
               <div>
-                <label className="label">{t('sell.form.quantity')}</label>
-                <div className="relative">
-                  <Hash className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
-                  <input
-                    type="number"
-                    name="quantity"
-                    value={formData.quantity}
-                    onChange={handleChange}
-                    className="input pl-10"
-                    min="1"
-                    max="10"
-                  />
-                </div>
+                <label className="label flex items-center gap-2">
+                  <Hash className="w-4 h-4 text-zinc-500" />
+                  {t('sell.form.quantity')}
+                </label>
+                <input
+                  type="number"
+                  name="quantity"
+                  value={formData.quantity}
+                  onChange={handleChange}
+                  className="input"
+                  min="1"
+                  max="10"
+                />
               </div>
             </div>
 
             {/* Description */}
             <div>
-              <label className="label">{t('sell.form.description')}</label>
-              <div className="relative">
-                <FileText className="absolute left-3 top-3 w-5 h-5 text-zinc-400" />
-                <textarea
-                  name="description"
-                  value={formData.description || ''}
-                  onChange={handleChange}
-                  className="input pl-10 min-h-[100px] resize-none"
-                  placeholder="დამატებითი ინფორმაცია..."
-                />
-              </div>
+              <label className="label flex items-center gap-2">
+                <FileText className="w-4 h-4 text-zinc-500" />
+                {t('sell.form.description')}
+              </label>
+              <textarea
+                name="description"
+                value={formData.description || ''}
+                onChange={handleChange}
+                className="input min-h-[100px] resize-none"
+                placeholder="დამატებითი ინფორმაცია..."
+              />
             </div>
 
             {/* Ticket Proof Upload */}
@@ -348,10 +386,10 @@ export default function SellPage() {
               <label className="label">{t('sell.form.proof')}</label>
               <div
                 onClick={() => fileInputRef.current?.click()}
-                className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
+                className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all duration-300 ${
                   ticketProof
-                    ? 'border-primary-300 bg-primary-50'
-                    : 'border-zinc-300 hover:border-zinc-400'
+                    ? 'border-[#c4f135]/50 bg-[#c4f135]/5'
+                    : 'border-white/10 hover:border-white/20 hover:bg-white/5'
                 }`}
               >
                 <input
@@ -362,15 +400,17 @@ export default function SellPage() {
                   className="hidden"
                 />
                 {ticketProof ? (
-                  <div className="flex items-center justify-center gap-2 text-primary-700">
+                  <div className="flex items-center justify-center gap-2 text-[#c4f135]">
                     <CheckCircle className="w-5 h-5" />
                     <span>{ticketProof.name}</span>
                   </div>
                 ) : (
                   <>
-                    <Upload className="w-8 h-8 text-zinc-400 mx-auto mb-2" />
-                    <p className="text-zinc-600">დააწკაპუნეთ ან გადმოიტანეთ ფაილი</p>
-                    <p className="text-xs text-zinc-400 mt-1">PNG, JPG, PDF (მაქს. 5MB)</p>
+                    <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center mx-auto mb-3">
+                      <Upload className="w-6 h-6 text-zinc-500" />
+                    </div>
+                    <p className="text-zinc-400">დააწკაპუნეთ ან გადმოიტანეთ ფაილი</p>
+                    <p className="text-xs text-zinc-600 mt-1">PNG, JPG, PDF (მაქს. 5MB)</p>
                   </>
                 )}
               </div>
@@ -380,12 +420,15 @@ export default function SellPage() {
             <button
               type="submit"
               disabled={loading}
-              className="btn btn-primary w-full justify-center py-3"
+              className="btn btn-primary w-full justify-center py-3.5"
             >
               {loading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
               ) : (
-                t('sell.form.submit')
+                <>
+                  {t('sell.form.submit')}
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </>
               )}
             </button>
           </form>

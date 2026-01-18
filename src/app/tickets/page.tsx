@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase'
 import { Ticket } from '@/types'
 import { useLanguage } from '@/contexts/LanguageContext'
 import TicketCard from '@/components/TicketCard'
-import { Search, Filter, Calendar, MapPin, Loader2 } from 'lucide-react'
+import { Search, SlidersHorizontal, Calendar, Sparkles, Loader2, Ticket as TicketIcon } from 'lucide-react'
 
 type EventCategory = 'all' | 'concerts' | 'clubs' | 'sports' | 'theater'
 
@@ -76,7 +76,7 @@ export default function TicketsPage() {
     return true
   })
 
-  const categories: { value: EventCategory; label: string }[] = [
+  const categories: { value: EventCategory; label: string; icon?: string }[] = [
     { value: 'all', label: t('tickets.filter.all') },
     { value: 'concerts', label: t('tickets.filter.concerts') },
     { value: 'clubs', label: t('tickets.filter.clubs') },
@@ -85,50 +85,69 @@ export default function TicketsPage() {
   ]
 
   return (
-    <div className="bg-zinc-50 min-h-screen">
-      {/* Header */}
-      <div className="bg-white border-b border-zinc-200">
-        <div className="container py-6">
-          <h1 className="text-2xl md:text-3xl font-bold text-zinc-900 mb-6">
-            {t('tickets.browse')}
-          </h1>
+    <div className="min-h-screen relative">
+      {/* Background effects */}
+      <div className="absolute inset-0 mesh-gradient" />
+      <div className="absolute inset-0 hero-grid opacity-30" />
+
+      {/* Glow orbs */}
+      <div className="glow-orb glow-orb-lime w-[400px] h-[400px] -top-32 right-0" />
+      <div className="glow-orb glow-orb-cyan w-[300px] h-[300px] top-1/2 -left-32" />
+
+      {/* Header Section */}
+      <div className="relative border-b border-white/5">
+        <div className="container py-8 md:py-12">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#c4f135]/20 to-[#c4f135]/5 flex items-center justify-center">
+              <TicketIcon className="w-5 h-5 text-[#c4f135]" />
+            </div>
+            <h1 className="text-3xl md:text-4xl font-bold text-white">
+              {t('tickets.browse')}
+            </h1>
+          </div>
+          <p className="text-zinc-400 mb-8">
+            იპოვე და შეიძინე ბილეთები უსაფრთხოდ
+          </p>
 
           {/* Search & Filters */}
           <div className="flex flex-col md:flex-row gap-4">
             {/* Search Input */}
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
               <input
                 type="text"
                 placeholder={t('tickets.search')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="input pl-10"
+                className="input pl-12 w-full"
               />
             </div>
 
             {/* Sort */}
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-              className="input w-full md:w-44"
-            >
-              <option value="recent">ახალი</option>
-              <option value="date">თარიღით</option>
-              <option value="price">ფასით</option>
-            </select>
+            <div className="relative">
+              <SlidersHorizontal className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500 pointer-events-none" />
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+                className="input pl-12 w-full md:w-48 appearance-none cursor-pointer"
+              >
+                <option value="recent">ახალი</option>
+                <option value="date">თარიღით</option>
+                <option value="price">ფასით</option>
+              </select>
+            </div>
           </div>
 
           {/* Category Tabs */}
-          <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
+          <div className="flex gap-2 mt-6 overflow-x-auto pb-2 scrollbar-hide">
             {categories.map((cat) => (
               <button
                 key={cat.value}
                 onClick={() => setCategory(cat.value)}
-                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
+                className={`px-5 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-all duration-300 ${
                   category === cat.value
-                    ? 'bg-primary-600 text-white'
-                    : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200'
+                    ? 'bg-[#c4f135] text-[#050507] shadow-lg shadow-[#c4f135]/20'
+                    : 'bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-white border border-white/10'
                 }`}
               >
                 {cat.label}
@@ -139,17 +158,26 @@ export default function TicketsPage() {
       </div>
 
       {/* Tickets Grid */}
-      <div className="container py-8">
+      <div className="container py-8 md:py-12 relative">
         {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
+          <div className="flex flex-col items-center justify-center py-20">
+            <div className="relative">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#c4f135]/20 to-[#c4f135]/5 flex items-center justify-center">
+                <Loader2 className="w-8 h-8 animate-spin text-[#c4f135]" />
+              </div>
+              <div className="absolute inset-0 rounded-2xl bg-[#c4f135] blur-2xl opacity-20 animate-pulse" />
+            </div>
+            <p className="text-zinc-500 mt-4">იტვირთება...</p>
           </div>
         ) : filteredTickets.length === 0 ? (
           <div className="text-center py-20">
-            <div className="w-16 h-16 bg-zinc-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Search className="w-8 h-8 text-zinc-400" />
+            <div className="relative w-20 h-20 mx-auto mb-6">
+              <div className="absolute inset-0 rounded-2xl bg-white/5 border border-white/10" />
+              <div className="relative w-full h-full rounded-2xl flex items-center justify-center">
+                <Search className="w-10 h-10 text-zinc-600" />
+              </div>
             </div>
-            <h3 className="text-lg font-medium text-zinc-900 mb-2">
+            <h3 className="text-xl font-semibold text-white mb-2">
               {t('tickets.no_results')}
             </h3>
             <p className="text-zinc-500">
@@ -157,11 +185,21 @@ export default function TicketsPage() {
             </p>
           </div>
         ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredTickets.map((ticket) => (
-              <TicketCard key={ticket.id} ticket={ticket} />
-            ))}
-          </div>
+          <>
+            {/* Results count */}
+            <div className="flex items-center gap-2 mb-6">
+              <Sparkles className="w-4 h-4 text-[#c4f135]" />
+              <span className="text-sm text-zinc-400">
+                ნაპოვნია <span className="text-white font-medium">{filteredTickets.length}</span> ბილეთი
+              </span>
+            </div>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {filteredTickets.map((ticket) => (
+                <TicketCard key={ticket.id} ticket={ticket} />
+              ))}
+            </div>
+          </>
         )}
       </div>
     </div>

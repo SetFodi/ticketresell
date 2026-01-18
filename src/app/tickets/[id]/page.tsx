@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
 import { useAuth } from '@/contexts/AuthContext'
 import { useLanguage } from '@/contexts/LanguageContext'
-import { Ticket, Transaction } from '@/types'
+import { Ticket } from '@/types'
 import { formatPrice, formatDate, formatRelativeTime } from '@/lib/utils'
 import VerificationBadge from '@/components/VerificationBadge'
 import {
@@ -18,8 +18,12 @@ import {
   Loader2,
   AlertCircle,
   CreditCard,
-  MessageSquare,
   Shield,
+  Sparkles,
+  TrendingUp,
+  TrendingDown,
+  Ticket as TicketIcon,
+  CheckCircle,
 } from 'lucide-react'
 
 export default function TicketDetailPage() {
@@ -100,20 +104,30 @@ export default function TicketDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-zinc-50 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
+      <div className="min-h-screen flex items-center justify-center relative">
+        <div className="absolute inset-0 mesh-gradient" />
+        <div className="relative">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#c4f135]/20 to-[#c4f135]/5 flex items-center justify-center">
+            <Loader2 className="w-8 h-8 animate-spin text-[#c4f135]" />
+          </div>
+          <div className="absolute inset-0 rounded-2xl bg-[#c4f135] blur-2xl opacity-20 animate-pulse" />
+        </div>
       </div>
     )
   }
 
   if (!ticket) {
     return (
-      <div className="min-h-screen bg-zinc-50 flex items-center justify-center">
-        <div className="text-center">
-          <AlertCircle className="w-12 h-12 text-zinc-400 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-zinc-900 mb-2">ბილეთი ვერ მოიძებნა</h2>
-          <Link href="/tickets" className="text-primary-600 hover:underline">
-            ← უკან დაბრუნება
+      <div className="min-h-screen flex items-center justify-center relative">
+        <div className="absolute inset-0 mesh-gradient" />
+        <div className="text-center relative">
+          <div className="w-20 h-20 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-6">
+            <AlertCircle className="w-10 h-10 text-zinc-500" />
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-3">ბილეთი ვერ მოიძებნა</h2>
+          <Link href="/tickets" className="text-[#c4f135] hover:underline inline-flex items-center gap-2">
+            <ArrowLeft className="w-4 h-4" />
+            უკან დაბრუნება
           </Link>
         </div>
       </div>
@@ -123,15 +137,29 @@ export default function TicketDetailPage() {
   const isOwner = user?.id === ticket.seller_id
   const canPurchase = user && !isOwner && ticket.status === 'available'
 
+  const priceIncrease = ticket.asking_price > ticket.original_price
+  const priceDecrease = ticket.asking_price < ticket.original_price
+  const priceDiffPercent = ticket.original_price > 0
+    ? Math.round(((ticket.asking_price - ticket.original_price) / ticket.original_price) * 100)
+    : 0
+
   return (
-    <div className="min-h-screen bg-zinc-50">
-      <div className="container py-6 md:py-10">
+    <div className="min-h-screen relative">
+      {/* Background effects */}
+      <div className="absolute inset-0 mesh-gradient" />
+      <div className="absolute inset-0 hero-grid opacity-20" />
+
+      {/* Glow orbs */}
+      <div className="glow-orb glow-orb-lime w-[400px] h-[400px] -top-32 -right-32" />
+      <div className="glow-orb glow-orb-cyan w-[300px] h-[300px] bottom-0 -left-32" />
+
+      <div className="container py-8 md:py-12 relative">
         {/* Back Button */}
         <Link
           href="/tickets"
-          className="inline-flex items-center gap-2 text-zinc-600 hover:text-zinc-900 mb-6"
+          className="inline-flex items-center gap-2 text-zinc-400 hover:text-white mb-8 transition-colors group"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
           {t('common.back')}
         </Link>
 
@@ -139,13 +167,16 @@ export default function TicketDetailPage() {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Ticket Info Card */}
-            <div className="card p-6 md:p-8">
+            <div className="card p-6 md:p-8 relative overflow-hidden">
+              {/* Card glow */}
+              <div className="absolute top-0 right-0 w-64 h-64 bg-[#c4f135]/5 rounded-full blur-3xl" />
+
               {/* Status Badge */}
               {ticket.status !== 'available' && (
                 <div className="mb-4">
                   <span className={`badge ${
-                    ticket.status === 'sold' ? 'badge-danger' :
-                    ticket.status === 'pending' ? 'badge-warning' :
+                    ticket.status === 'sold' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
+                    ticket.status === 'pending' ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20' :
                     'badge-secondary'
                   }`}>
                     {ticket.status === 'sold' && 'გაყიდული'}
@@ -155,70 +186,97 @@ export default function TicketDetailPage() {
                 </div>
               )}
 
-              <h1 className="text-2xl md:text-3xl font-bold text-zinc-900 mb-4">
+              <h1 className="text-2xl md:text-3xl font-bold text-white mb-6 relative">
                 {ticket.event_name}
               </h1>
 
               <div className="grid sm:grid-cols-2 gap-4 mb-6">
-                <div className="flex items-center gap-3 text-zinc-600">
-                  <Calendar className="w-5 h-5 text-zinc-400" />
+                <div className="flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/5">
+                  <div className="w-12 h-12 rounded-xl bg-[#00f5d4]/10 flex items-center justify-center">
+                    <Calendar className="w-6 h-6 text-[#00f5d4]" />
+                  </div>
                   <div>
-                    <div className="text-sm text-zinc-500">{t('ticket.event_date')}</div>
-                    <div className="font-medium">{formatDate(ticket.event_date)}</div>
+                    <div className="text-xs text-zinc-500 uppercase tracking-wider">{t('ticket.event_date')}</div>
+                    <div className="text-white font-medium">{formatDate(ticket.event_date)}</div>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 text-zinc-600">
-                  <MapPin className="w-5 h-5 text-zinc-400" />
+                <div className="flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/5">
+                  <div className="w-12 h-12 rounded-xl bg-[#ff6b9d]/10 flex items-center justify-center">
+                    <MapPin className="w-6 h-6 text-[#ff6b9d]" />
+                  </div>
                   <div>
-                    <div className="text-sm text-zinc-500">{t('ticket.venue')}</div>
-                    <div className="font-medium">{ticket.venue}</div>
+                    <div className="text-xs text-zinc-500 uppercase tracking-wider">{t('ticket.venue')}</div>
+                    <div className="text-white font-medium">{ticket.venue}</div>
                   </div>
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-4 py-4 border-y border-zinc-100">
+              {/* Ticket details */}
+              <div className="flex flex-wrap gap-6 py-6 border-y border-white/5">
                 <div>
-                  <div className="text-sm text-zinc-500">{t('ticket.type')}</div>
-                  <div className="font-medium">{ticket.ticket_type}</div>
+                  <div className="text-xs text-zinc-500 uppercase tracking-wider mb-1">{t('ticket.type')}</div>
+                  <div className="badge badge-secondary">{ticket.ticket_type}</div>
                 </div>
                 <div>
-                  <div className="text-sm text-zinc-500">{t('ticket.quantity')}</div>
-                  <div className="font-medium">{ticket.quantity} ბილეთი</div>
+                  <div className="text-xs text-zinc-500 uppercase tracking-wider mb-1">{t('ticket.quantity')}</div>
+                  <div className="text-white font-medium">{ticket.quantity} ბილეთი</div>
                 </div>
                 <div>
-                  <div className="text-sm text-zinc-500">{t('ticket.listed')}</div>
-                  <div className="font-medium">{formatRelativeTime(ticket.created_at)}</div>
+                  <div className="text-xs text-zinc-500 uppercase tracking-wider mb-1">{t('ticket.listed')}</div>
+                  <div className="flex items-center gap-1 text-zinc-400">
+                    <Clock className="w-4 h-4" />
+                    {formatRelativeTime(ticket.created_at)}
+                  </div>
                 </div>
               </div>
 
               {ticket.description && (
                 <div className="mt-6">
-                  <h3 className="font-medium text-zinc-900 mb-2">აღწერა</h3>
-                  <p className="text-zinc-600">{ticket.description}</p>
+                  <h3 className="font-medium text-white mb-2">აღწერა</h3>
+                  <p className="text-zinc-400 leading-relaxed">{ticket.description}</p>
                 </div>
               )}
             </div>
 
             {/* Seller Card */}
             {ticket.seller && (
-              <div className="card p-6">
-                <h3 className="font-semibold text-zinc-900 mb-4">{t('ticket.seller')}</h3>
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-full bg-zinc-100 flex items-center justify-center">
-                    <User className="w-7 h-7 text-zinc-400" />
+              <div className="card p-6 relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-32 h-32 bg-[#00f5d4]/5 rounded-full blur-3xl" />
+
+                <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
+                  <User className="w-5 h-5 text-[#c4f135]" />
+                  {t('ticket.seller')}
+                </h3>
+
+                <div className="flex items-center gap-4 relative">
+                  <div className="relative">
+                    <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center border border-white/10">
+                      <User className="w-8 h-8 text-zinc-400" />
+                    </div>
+                    {ticket.seller.is_verified_seller && (
+                      <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-[#c4f135] flex items-center justify-center shadow-lg shadow-[#c4f135]/30">
+                        <Sparkles className="w-3.5 h-3.5 text-[#050507]" />
+                      </div>
+                    )}
                   </div>
+
                   <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium text-zinc-900">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-medium text-white text-lg">
                         {ticket.seller.full_name || 'გამყიდველი'}
                       </span>
                       {ticket.seller.is_verified_seller && (
                         <VerificationBadge size="sm" />
                       )}
                     </div>
-                    <div className="text-sm text-zinc-500 mt-1">
-                      რეპუტაცია: {ticket.seller.reputation_score}%
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-1.5">
+                        <div className="w-2 h-2 rounded-full bg-[#c4f135]" />
+                        <span className="text-sm text-zinc-400">
+                          {ticket.seller.reputation_score}% რეპუტაცია
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -228,35 +286,53 @@ export default function TicketDetailPage() {
 
           {/* Sidebar - Purchase Card */}
           <div className="lg:col-span-1">
-            <div className="card p-6 sticky top-24">
+            <div className="card p-6 sticky top-24 relative overflow-hidden">
+              {/* Glow effect */}
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-[#c4f135]/10 rounded-full blur-[60px]" />
+
               {/* Price */}
-              <div className="mb-6">
-                <div className="text-sm text-zinc-500 mb-1">
-                  {t('ticket.original_price')}: {formatPrice(ticket.original_price)} ₾
-                </div>
+              <div className="mb-6 relative">
+                {ticket.original_price > 0 && (
+                  <div className="text-sm text-zinc-500 mb-1 line-through">
+                    {formatPrice(ticket.original_price)} ₾
+                  </div>
+                )}
                 <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-bold text-zinc-900">
+                  <span className="text-4xl font-bold text-white">
                     {formatPrice(ticket.asking_price)}
                   </span>
                   <span className="text-xl text-zinc-500">₾</span>
                 </div>
-                {ticket.asking_price !== ticket.original_price && (
-                  <div className={`text-sm mt-1 ${
-                    ticket.asking_price > ticket.original_price ? 'text-red-600' : 'text-green-600'
-                  }`}>
-                    {ticket.asking_price > ticket.original_price ? '+' : ''}
-                    {Math.round(((ticket.asking_price - ticket.original_price) / ticket.original_price) * 100)}%
+
+                {/* Price Change Indicator */}
+                {priceDiffPercent !== 0 && (
+                  <div
+                    className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-sm font-bold mt-2 ${
+                      priceIncrease
+                        ? 'bg-red-500/10 text-red-400'
+                        : 'bg-green-500/10 text-green-400'
+                    }`}
+                  >
+                    {priceIncrease ? (
+                      <TrendingUp className="w-4 h-4" />
+                    ) : (
+                      <TrendingDown className="w-4 h-4" />
+                    )}
+                    {priceIncrease ? '+' : ''}{priceDiffPercent}%
                     {' '}
-                    {ticket.asking_price > ticket.original_price ? 'მეტი' : 'ნაკლები'}
+                    {priceIncrease ? 'მეტი' : 'ნაკლები'}
                   </div>
                 )}
               </div>
 
               {/* Trust Indicators */}
               {ticket.seller?.is_verified_seller && (
-                <div className="flex items-center gap-2 p-3 bg-primary-50 rounded-lg mb-4">
-                  <Shield className="w-5 h-5 text-primary-600" />
-                  <span className="text-sm text-primary-700">ვერიფიცირებული გამყიდველი</span>
+                <div className="flex items-center gap-3 p-4 bg-[#c4f135]/10 border border-[#c4f135]/20 rounded-xl mb-6">
+                  <Shield className="w-6 h-6 text-[#c4f135]" />
+                  <div>
+                    <span className="text-sm font-medium text-[#c4f135]">ვერიფიცირებული გამყიდველი</span>
+                    <p className="text-xs text-zinc-500">თანხა დაცულია</p>
+                  </div>
                 </div>
               )}
 
@@ -264,29 +340,31 @@ export default function TicketDetailPage() {
               {!user ? (
                 <Link
                   href="/login"
-                  className="btn btn-primary w-full justify-center"
+                  className="btn btn-primary w-full justify-center py-3.5"
                 >
                   შედი ყიდვისთვის
                 </Link>
               ) : isOwner ? (
-                <div className="text-center text-zinc-500 py-4">
+                <div className="text-center text-zinc-500 py-4 px-4 rounded-xl bg-white/5 border border-white/5">
+                  <TicketIcon className="w-6 h-6 mx-auto mb-2 text-zinc-600" />
                   ეს თქვენი განცხადებაა
                 </div>
               ) : ticket.status !== 'available' ? (
-                <div className="text-center text-zinc-500 py-4">
+                <div className="text-center text-zinc-500 py-4 px-4 rounded-xl bg-white/5 border border-white/5">
+                  <AlertCircle className="w-6 h-6 mx-auto mb-2 text-zinc-600" />
                   ბილეთი მიუწვდომელია
                 </div>
               ) : (
                 <button
                   onClick={() => setShowBuyModal(true)}
-                  className="btn btn-primary w-full justify-center"
+                  className="btn btn-primary w-full justify-center py-3.5 group"
                   disabled={purchasing}
                 >
                   {purchasing ? (
                     <Loader2 className="w-5 h-5 animate-spin" />
                   ) : (
                     <>
-                      <CreditCard className="w-5 h-5 mr-2" />
+                      <CreditCard className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
                       {t('ticket.buy_now')}
                     </>
                   )}
@@ -294,7 +372,7 @@ export default function TicketDetailPage() {
               )}
 
               {canPurchase && (
-                <p className="text-xs text-zinc-500 text-center mt-4">
+                <p className="text-xs text-zinc-600 text-center mt-4">
                   ყიდვის შემდეგ მიიღებთ გამყიდველის საკონტაქტო ინფორმაციას
                 </p>
               )}
@@ -304,48 +382,71 @@ export default function TicketDetailPage() {
 
         {/* Buy Confirmation Modal */}
         {showBuyModal && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl max-w-md w-full p-6 animate-fade-in">
-              <h3 className="text-xl font-semibold text-zinc-900 mb-4">
-                ბილეთის ყიდვა
-              </h3>
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="card max-w-md w-full p-6 animate-fade-in relative overflow-hidden">
+              {/* Modal glow */}
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-[#c4f135]/20 rounded-full blur-[60px]" />
 
-              <div className="bg-zinc-50 rounded-lg p-4 mb-4">
-                <div className="font-medium text-zinc-900 mb-1">{ticket.event_name}</div>
-                <div className="text-sm text-zinc-500">{formatDate(ticket.event_date)}</div>
-                <div className="text-2xl font-bold text-zinc-900 mt-2">
-                  {formatPrice(ticket.asking_price)} ₾
+              <div className="relative">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#c4f135] to-[#9bc22a] flex items-center justify-center mx-auto mb-6">
+                  <TicketIcon className="w-8 h-8 text-[#050507]" />
                 </div>
-              </div>
 
-              <div className="text-sm text-zinc-600 mb-6">
-                <p className="mb-2">
-                  ყიდვის დადასტურების შემდეგ თქვენ მიიღებთ გამყიდველის საბანკო რეკვიზიტებს.
-                  გადახდის შემდეგ ატვირთეთ გადარიცხვის დამადასტურებელი.
-                </p>
-                <p className="text-primary-600">
-                  თანხა დაცულია სანამ არ მიიღებთ ბილეთს.
-                </p>
-              </div>
+                <h3 className="text-xl font-bold text-white text-center mb-6">
+                  ბილეთის ყიდვა
+                </h3>
 
-              <div className="flex gap-3">
-                <button
-                  onClick={() => setShowBuyModal(false)}
-                  className="btn btn-secondary flex-1"
-                >
-                  გაუქმება
-                </button>
-                <button
-                  onClick={handlePurchase}
-                  disabled={purchasing}
-                  className="btn btn-primary flex-1"
-                >
-                  {purchasing ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                  ) : (
-                    'დადასტურება'
-                  )}
-                </button>
+                <div className="bg-white/5 border border-white/10 rounded-xl p-4 mb-6">
+                  <div className="font-medium text-white mb-1">{ticket.event_name}</div>
+                  <div className="text-sm text-zinc-500 mb-3">{formatDate(ticket.event_date)}</div>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-bold text-[#c4f135]">
+                      {formatPrice(ticket.asking_price)}
+                    </span>
+                    <span className="text-lg text-zinc-500">₾</span>
+                  </div>
+                </div>
+
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-start gap-3">
+                    <CheckCircle className="w-5 h-5 text-[#00f5d4] flex-shrink-0 mt-0.5" />
+                    <p className="text-sm text-zinc-400">
+                      ყიდვის დადასტურების შემდეგ თქვენ მიიღებთ გამყიდველის საბანკო რეკვიზიტებს
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <CheckCircle className="w-5 h-5 text-[#00f5d4] flex-shrink-0 mt-0.5" />
+                    <p className="text-sm text-zinc-400">
+                      გადახდის შემდეგ ატვირთეთ გადარიცხვის დამადასტურებელი
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <Shield className="w-5 h-5 text-[#c4f135] flex-shrink-0 mt-0.5" />
+                    <p className="text-sm text-[#c4f135]">
+                      თანხა დაცულია სანამ არ მიიღებთ ბილეთს
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setShowBuyModal(false)}
+                    className="btn btn-secondary flex-1"
+                  >
+                    გაუქმება
+                  </button>
+                  <button
+                    onClick={handlePurchase}
+                    disabled={purchasing}
+                    className="btn btn-primary flex-1"
+                  >
+                    {purchasing ? (
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                    ) : (
+                      'დადასტურება'
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
           </div>

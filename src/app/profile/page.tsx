@@ -21,10 +21,11 @@ import {
   Star,
   Loader2,
   Plus,
-  AlertCircle,
   ChevronRight,
-  Clock,
+  Sparkles,
+  ArrowRight,
   CheckCircle,
+  Clock,
   XCircle,
 } from 'lucide-react'
 
@@ -112,8 +113,14 @@ export default function ProfilePage() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-zinc-50 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
+      <div className="min-h-screen flex items-center justify-center relative">
+        <div className="absolute inset-0 mesh-gradient" />
+        <div className="relative">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#c4f135]/20 to-[#c4f135]/5 flex items-center justify-center">
+            <Loader2 className="w-8 h-8 animate-spin text-[#c4f135]" />
+          </div>
+          <div className="absolute inset-0 rounded-2xl bg-[#c4f135] blur-2xl opacity-20 animate-pulse" />
+        </div>
       </div>
     )
   }
@@ -125,40 +132,82 @@ export default function ProfilePage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'pending':
-        return <span className="badge badge-warning">მოლოდინში</span>
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
+            <Clock className="w-3 h-3" />
+            მოლოდინში
+          </span>
+        )
       case 'paid':
-        return <span className="badge badge-primary">გადახდილი</span>
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium bg-[#c4f135]/10 text-[#c4f135] border border-[#c4f135]/20">
+            <CheckCircle className="w-3 h-3" />
+            გადახდილი
+          </span>
+        )
       case 'released':
-        return <span className="badge badge-success">დასრულებული</span>
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium bg-green-500/10 text-green-400 border border-green-500/20">
+            <CheckCircle className="w-3 h-3" />
+            დასრულებული
+          </span>
+        )
       case 'refunded':
-        return <span className="badge badge-danger">დაბრუნებული</span>
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium bg-red-500/10 text-red-400 border border-red-500/20">
+            <XCircle className="w-3 h-3" />
+            დაბრუნებული
+          </span>
+        )
       default:
-        return <span className="badge badge-secondary">{status}</span>
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium bg-white/5 text-zinc-400 border border-white/10">
+            {status}
+          </span>
+        )
     }
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 py-8">
-      <div className="container max-w-4xl">
+    <div className="min-h-screen py-8 relative">
+      {/* Background effects */}
+      <div className="absolute inset-0 mesh-gradient" />
+      <div className="absolute inset-0 hero-grid opacity-20" />
+
+      {/* Glow orbs */}
+      <div className="glow-orb glow-orb-lime w-[400px] h-[400px] -top-32 -right-32" />
+      <div className="glow-orb glow-orb-cyan w-[300px] h-[300px] bottom-1/3 -left-32" />
+
+      <div className="container max-w-4xl relative">
         {/* Profile Header */}
-        <div className="card p-6 md:p-8 mb-6">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+        <div className="card p-6 md:p-8 mb-6 relative overflow-hidden">
+          {/* Card glow */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#c4f135]/5 rounded-full blur-3xl" />
+
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 relative">
             {/* Avatar */}
-            <div className="w-20 h-20 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0">
-              <User className="w-10 h-10 text-primary-600" />
+            <div className="relative">
+              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#c4f135]/20 to-[#00f5d4]/20 flex items-center justify-center border border-white/10">
+                <User className="w-10 h-10 text-[#c4f135]" />
+              </div>
+              {user.is_verified_seller && (
+                <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-[#c4f135] flex items-center justify-center shadow-lg shadow-[#c4f135]/30">
+                  <Sparkles className="w-4 h-4 text-[#050507]" />
+                </div>
+              )}
             </div>
 
             {/* Info */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-3 mb-2">
                 {editingName ? (
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <input
                       type="text"
                       value={newName}
                       onChange={(e) => setNewName(e.target.value)}
                       placeholder="თქვენი სახელი"
-                      className="input py-1 px-3"
+                      className="input py-2 px-3 w-48"
                       autoFocus
                     />
                     <button
@@ -169,14 +218,14 @@ export default function ProfilePage() {
                     </button>
                     <button
                       onClick={() => setEditingName(false)}
-                      className="btn btn-ghost btn-sm"
+                      className="btn btn-secondary btn-sm"
                     >
                       გაუქმება
                     </button>
                   </div>
                 ) : (
                   <>
-                    <h1 className="text-2xl font-bold text-zinc-900">
+                    <h1 className="text-2xl font-bold text-white">
                       {user.full_name || 'მომხმარებელი'}
                     </h1>
                     <button
@@ -184,9 +233,9 @@ export default function ProfilePage() {
                         setNewName(user.full_name || '')
                         setEditingName(true)
                       }}
-                      className="p-1.5 hover:bg-zinc-100 rounded-lg transition-colors"
+                      className="p-2 hover:bg-white/5 rounded-lg transition-colors"
                     >
-                      <Edit2 className="w-4 h-4 text-zinc-400" />
+                      <Edit2 className="w-4 h-4 text-zinc-500 hover:text-white" />
                     </button>
                     {user.is_verified_seller && (
                       <VerificationBadge showText />
@@ -195,7 +244,7 @@ export default function ProfilePage() {
                 )}
               </div>
 
-              <div className="flex flex-wrap items-center gap-4 text-sm text-zinc-500">
+              <div className="flex flex-wrap items-center gap-4 text-sm text-zinc-400">
                 <div className="flex items-center gap-1.5">
                   <Phone className="w-4 h-4" />
                   {formatPhoneNumber(user.phone)}
@@ -208,7 +257,7 @@ export default function ProfilePage() {
                 )}
                 <div className="flex items-center gap-1.5">
                   <Star className="w-4 h-4 text-yellow-500" />
-                  რეპუტაცია: {user.reputation_score}%
+                  <span>რეპუტაცია: <span className="text-white font-medium">{user.reputation_score}%</span></span>
                 </div>
               </div>
             </div>
@@ -216,21 +265,26 @@ export default function ProfilePage() {
 
           {/* Verification CTA */}
           {!user.is_verified_seller && (
-            <div className="mt-6 p-4 bg-primary-50 border border-primary-200 rounded-lg">
-              <div className="flex items-start gap-3">
-                <BadgeCheck className="w-6 h-6 text-primary-600 flex-shrink-0 mt-0.5" />
+            <div className="mt-6 p-4 bg-gradient-to-r from-[#c4f135]/10 to-[#00f5d4]/10 border border-[#c4f135]/20 rounded-xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-[#c4f135]/10 rounded-full blur-2xl" />
+
+              <div className="flex items-start gap-4 relative">
+                <div className="w-12 h-12 rounded-xl bg-[#c4f135]/20 flex items-center justify-center flex-shrink-0">
+                  <BadgeCheck className="w-6 h-6 text-[#c4f135]" />
+                </div>
                 <div className="flex-1">
-                  <h3 className="font-medium text-primary-900 mb-1">
+                  <h3 className="font-semibold text-white mb-1">
                     გახდი ვერიფიცირებული გამყიდველი
                   </h3>
-                  <p className="text-sm text-primary-700 mb-3">
+                  <p className="text-sm text-zinc-400 mb-3">
                     ვერიფიცირებული გამყიდველებს აქვთ მეტი ნდობა და მეტი გაყიდვები
                   </p>
                   <Link
                     href="/profile/verify"
-                    className="btn btn-primary btn-sm"
+                    className="btn btn-primary btn-sm group"
                   >
                     ვერიფიკაცია
+                    <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </div>
               </div>
@@ -242,50 +296,69 @@ export default function ProfilePage() {
         <div className="flex gap-2 mb-6">
           <button
             onClick={() => setTab('listings')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-colors ${
+            className={`flex items-center gap-2 px-5 py-3 rounded-xl font-medium transition-all duration-300 ${
               tab === 'listings'
-                ? 'bg-primary-600 text-white'
-                : 'bg-white text-zinc-600 hover:bg-zinc-100'
+                ? 'bg-[#c4f135] text-[#050507] shadow-lg shadow-[#c4f135]/20'
+                : 'bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-white border border-white/10'
             }`}
           >
             <TicketIcon className="w-5 h-5" />
             {t('profile.my_tickets')}
-            <span className="ml-1 text-sm opacity-75">({myTickets.length})</span>
+            <span className={`ml-1 px-2 py-0.5 rounded-md text-xs ${
+              tab === 'listings' ? 'bg-[#050507]/20' : 'bg-white/10'
+            }`}>
+              {myTickets.length}
+            </span>
           </button>
           <button
             onClick={() => setTab('purchases')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-colors ${
+            className={`flex items-center gap-2 px-5 py-3 rounded-xl font-medium transition-all duration-300 ${
               tab === 'purchases'
-                ? 'bg-primary-600 text-white'
-                : 'bg-white text-zinc-600 hover:bg-zinc-100'
+                ? 'bg-[#c4f135] text-[#050507] shadow-lg shadow-[#c4f135]/20'
+                : 'bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-white border border-white/10'
             }`}
           >
             <ShoppingBag className="w-5 h-5" />
             {t('profile.my_purchases')}
-            <span className="ml-1 text-sm opacity-75">({myPurchases.length})</span>
+            <span className={`ml-1 px-2 py-0.5 rounded-md text-xs ${
+              tab === 'purchases' ? 'bg-[#050507]/20' : 'bg-white/10'
+            }`}>
+              {myPurchases.length}
+            </span>
           </button>
         </div>
 
         {/* Content */}
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
+            <div className="relative">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#c4f135]/20 to-[#c4f135]/5 flex items-center justify-center">
+                <Loader2 className="w-6 h-6 animate-spin text-[#c4f135]" />
+              </div>
+            </div>
           </div>
         ) : tab === 'listings' ? (
           <div>
             {myTickets.length === 0 ? (
-              <div className="card p-8 text-center">
-                <TicketIcon className="w-12 h-12 text-zinc-300 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-zinc-900 mb-2">
-                  ჯერ არ გაქვთ განცხადებები
-                </h3>
-                <p className="text-zinc-500 mb-6">
-                  გამოაქვეყნეთ თქვენი პირველი ბილეთი
-                </p>
-                <Link href="/sell" className="btn btn-primary">
-                  <Plus className="w-5 h-5 mr-2" />
-                  ბილეთის გამოქვეყნება
-                </Link>
+              <div className="card p-8 text-center relative overflow-hidden">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-[#c4f135]/5 rounded-full blur-3xl" />
+
+                <div className="relative">
+                  <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-4">
+                    <TicketIcon className="w-8 h-8 text-zinc-600" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-white mb-2">
+                    ჯერ არ გაქვთ განცხადებები
+                  </h3>
+                  <p className="text-zinc-500 mb-6">
+                    გამოაქვეყნეთ თქვენი პირველი ბილეთი
+                  </p>
+                  <Link href="/sell" className="btn btn-primary group">
+                    <Plus className="w-5 h-5 mr-2" />
+                    ბილეთის გამოქვეყნება
+                    <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </div>
               </div>
             ) : (
               <div className="grid sm:grid-cols-2 gap-4">
@@ -298,17 +371,24 @@ export default function ProfilePage() {
         ) : (
           <div>
             {myPurchases.length === 0 ? (
-              <div className="card p-8 text-center">
-                <ShoppingBag className="w-12 h-12 text-zinc-300 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-zinc-900 mb-2">
-                  ჯერ არ გაქვთ შენაძენები
-                </h3>
-                <p className="text-zinc-500 mb-6">
-                  იპოვეთ თქვენთვის სასურველი ბილეთი
-                </p>
-                <Link href="/tickets" className="btn btn-primary">
-                  ბილეთების ნახვა
-                </Link>
+              <div className="card p-8 text-center relative overflow-hidden">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-[#00f5d4]/5 rounded-full blur-3xl" />
+
+                <div className="relative">
+                  <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-4">
+                    <ShoppingBag className="w-8 h-8 text-zinc-600" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-white mb-2">
+                    ჯერ არ გაქვთ შენაძენები
+                  </h3>
+                  <p className="text-zinc-500 mb-6">
+                    იპოვეთ თქვენთვის სასურველი ბილეთი
+                  </p>
+                  <Link href="/tickets" className="btn btn-primary group">
+                    ბილეთების ნახვა
+                    <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </div>
               </div>
             ) : (
               <div className="space-y-4">
@@ -316,11 +396,11 @@ export default function ProfilePage() {
                   <Link
                     key={purchase.id}
                     href={`/transactions/${purchase.id}`}
-                    className="card p-4 block hover:shadow-md transition-shadow"
+                    className="card p-4 block hover:bg-white/[0.03] transition-colors group"
                   >
                     <div className="flex items-center justify-between gap-4">
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-medium text-zinc-900 truncate">
+                        <h3 className="font-medium text-white truncate group-hover:text-[#c4f135] transition-colors">
                           {purchase.ticket?.event_name}
                         </h3>
                         <p className="text-sm text-zinc-500">
@@ -328,12 +408,12 @@ export default function ProfilePage() {
                         </p>
                       </div>
                       <div className="text-right">
-                        <div className="font-semibold text-zinc-900">
+                        <div className="font-bold text-white mb-1">
                           {formatPrice(purchase.amount)} ₾
                         </div>
                         {getStatusBadge(purchase.payment_status)}
                       </div>
-                      <ChevronRight className="w-5 h-5 text-zinc-400" />
+                      <ChevronRight className="w-5 h-5 text-zinc-600 group-hover:text-[#c4f135] group-hover:translate-x-1 transition-all" />
                     </div>
                   </Link>
                 ))}
