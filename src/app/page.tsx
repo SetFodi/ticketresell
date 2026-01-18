@@ -39,14 +39,14 @@ export default function HomePage() {
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8 animate-fade-in-up">
               <div className="w-2 h-2 rounded-full bg-[#c4f135] animate-pulse" />
-              <span className="text-sm text-zinc-400">საქართველოს #1 ბილეთების პლატფორმა</span>
+              <span className="text-sm text-zinc-400">{t('home.badge')}</span>
             </div>
 
             {/* Main heading */}
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] mb-6 animate-fade-in-up stagger-1">
-              <span className="text-white">იყიდე და გაყიდე</span>
+              <span className="text-white">{t('home.hero.title_line1')}</span>
               <br />
-              <span className="gradient-text">ბილეთები უსაფრთხოდ</span>
+              <span className="gradient-text">{t('home.hero.title_line2')}</span>
             </h1>
 
             <p className="text-xl md:text-2xl text-zinc-400 mb-10 max-w-2xl leading-relaxed animate-fade-in-up stagger-2">
@@ -80,7 +80,7 @@ export default function HomePage() {
                 </div>
                 <div>
                   <div className="text-2xl font-bold text-white">500+</div>
-                  <div className="text-xs text-zinc-500">მომხმარებელი</div>
+                  <div className="text-xs text-zinc-500">{t('home.stats.users')}</div>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -89,7 +89,7 @@ export default function HomePage() {
                 </div>
                 <div>
                   <div className="text-2xl font-bold text-white">100%</div>
-                  <div className="text-xs text-zinc-500">ვერიფიცირებული</div>
+                  <div className="text-xs text-zinc-500">{t('home.stats.verified')}</div>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -98,7 +98,7 @@ export default function HomePage() {
                 </div>
                 <div>
                   <div className="text-2xl font-bold text-white">0%</div>
-                  <div className="text-xs text-zinc-500">თაღლითობა</div>
+                  <div className="text-xs text-zinc-500">{t('home.stats.fraud')}</div>
                 </div>
               </div>
             </div>
@@ -111,11 +111,10 @@ export default function HomePage() {
         <div className="container">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              რატომ <span className="gradient-text">TktResell</span>?
+              {t('home.why')} <span className="gradient-text">TktResell</span>?
             </h2>
             <p className="text-lg text-zinc-400 max-w-2xl mx-auto">
-              Facebook-ისა და Telegram-ის ჯგუფებში ბილეთების ყიდვა სარისკოა.
-              ჩვენთან თანხა დაცულია.
+              {t('home.why_desc')}
             </p>
           </div>
 
@@ -228,27 +227,27 @@ export default function HomePage() {
             <div className="relative text-center">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#c4f135]/10 border border-[#c4f135]/20 mb-6">
                 <Sparkles className="w-4 h-4 text-[#c4f135]" />
-                <span className="text-sm font-medium text-[#c4f135]">ნდობა და უსაფრთხოება</span>
+                <span className="text-sm font-medium text-[#c4f135]">{t('home.trust.title')}</span>
               </div>
 
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-8">
-                თქვენი ფული დაცულია
+                {t('home.trust.subtitle')}
               </h2>
 
               <div className="grid sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
                 <TrustPoint
                   icon={<BadgeCheck className="w-6 h-6" />}
-                  text="ვერიფიცირებული გამყიდველები"
+                  text={t('home.trust.verified')}
                   color="#c4f135"
                 />
                 <TrustPoint
                   icon={<Shield className="w-6 h-6" />}
-                  text="თანხის დაცვა ღონისძიებამდე"
+                  text={t('home.trust.escrow')}
                   color="#00f5d4"
                 />
                 <TrustPoint
                   icon={<Star className="w-6 h-6" />}
-                  text="მარტივი დავების გადაწყვეტა"
+                  text={t('home.trust.disputes')}
                   color="#ff6b9d"
                 />
               </div>
@@ -263,16 +262,16 @@ export default function HomePage() {
 
         <div className="container relative text-center">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            მზად ხართ <span className="gradient-text">დასაწყებად</span>?
+            {t('home.cta.title')} <span className="gradient-text">{t('home.cta.title2')}</span>?
           </h2>
           <p className="text-xl text-zinc-400 mb-10 max-w-xl mx-auto">
-            დარეგისტრირდით უფასოდ და დაიწყეთ ბილეთების უსაფრთხო ყიდვა-გაყიდვა.
+            {t('home.cta.subtitle')}
           </p>
           <Link
             href="/login"
             className="btn btn-primary btn-lg group"
           >
-            დაწყება
+            {t('home.cta.button')}
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>

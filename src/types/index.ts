@@ -18,6 +18,7 @@ export interface User {
   phone: string
   full_name: string | null
   is_verified_seller: boolean
+  is_admin: boolean
   bank_account_last4: string | null
   reputation_score: number
   created_at: string

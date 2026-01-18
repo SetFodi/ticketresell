@@ -7,13 +7,29 @@ export function createClient() {
   if (!supabaseUrl || !supabaseKey) {
     console.warn('Supabase credentials missing. Using mock client for preview.')
 
-    // safe mock for browsing the UI
+    // safe mock for browsing the UI - includes all query methods
     const queryBuilder: any = {
       select: () => queryBuilder,
       insert: () => queryBuilder,
       update: () => queryBuilder,
+      delete: () => queryBuilder,
       eq: () => queryBuilder,
+      neq: () => queryBuilder,
+      gt: () => queryBuilder,
+      gte: () => queryBuilder,
+      lt: () => queryBuilder,
+      lte: () => queryBuilder,
+      like: () => queryBuilder,
+      ilike: () => queryBuilder,
+      is: () => queryBuilder,
+      in: () => queryBuilder,
+      contains: () => queryBuilder,
+      containedBy: () => queryBuilder,
+      order: () => queryBuilder,
+      limit: () => queryBuilder,
+      range: () => queryBuilder,
       single: async () => ({ data: null, error: null }),
+      maybeSingle: async () => ({ data: null, error: null }),
       then: (resolve: any) => resolve({ data: [], error: null }),
     }
 

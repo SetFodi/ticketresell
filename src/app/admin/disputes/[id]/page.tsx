@@ -13,7 +13,6 @@ import {
   Loader2,
   AlertCircle,
   User,
-  Phone,
   Calendar,
   DollarSign,
   CheckCircle,
@@ -22,8 +21,6 @@ import {
   FileText,
   ExternalLink,
 } from 'lucide-react'
-
-const ADMIN_IDS = ['YOUR_ADMIN_USER_ID_HERE']
 
 export default function AdminDisputeDetailPage() {
   const params = useParams()
@@ -35,7 +32,9 @@ export default function AdminDisputeDetailPage() {
   const [resolutionNotes, setResolutionNotes] = useState('')
 
   const supabase = createClient()
-  const isAdmin = user && ADMIN_IDS.includes(user.id)
+
+  // Admin check using database is_admin field
+  const isAdmin = user?.is_admin === true
 
   const fetchDispute = useCallback(async (id: string) => {
     setLoading(true)

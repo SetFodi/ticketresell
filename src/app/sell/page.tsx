@@ -60,7 +60,7 @@ export default function SellPage() {
     const file = e.target.files?.[0]
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        setError('ფაილი ძალიან დიდია (მაქს. 5MB)')
+        setError(t('sell.file_too_large'))
         return
       }
       setTicketProof(file)
@@ -78,12 +78,12 @@ export default function SellPage() {
     }
 
     if (!formData.event_name || !formData.event_date || !formData.venue) {
-      setError('გთხოვთ შეავსოთ ყველა სავალდებულო ველი')
+      setError(t('sell.fill_required'))
       return
     }
 
     if (formData.asking_price <= 0) {
-      setError('გთხოვთ მიუთითოთ ფასი')
+      setError(t('sell.enter_price'))
       return
     }
 
@@ -102,7 +102,7 @@ export default function SellPage() {
           .upload(fileName, ticketProof)
 
         if (uploadError) {
-          throw new Error('ფაილის ატვირთვა ვერ მოხერხდა')
+          throw new Error(t('sell.upload_failed'))
         }
 
         const { data: urlData } = supabase.storage
@@ -132,7 +132,7 @@ export default function SellPage() {
         .single()
 
       if (ticketError) {
-        throw new Error('განცხადების შექმნა ვერ მოხერხდა')
+        throw new Error(t('sell.create_failed'))
       }
 
       setSuccess(true)
@@ -142,7 +142,7 @@ export default function SellPage() {
         router.push(`/tickets/${ticket.id}`)
       }, 2000)
     } catch (err: any) {
-      setError(err.message || 'შეცდომა მოხდა. სცადეთ თავიდან.')
+      setError(err.message || t('sell.generic_error'))
     } finally {
       setLoading(false)
     }
@@ -160,13 +160,13 @@ export default function SellPage() {
             <AlertCircle className="w-8 h-8 text-zinc-500" />
           </div>
           <h2 className="text-xl font-bold text-white mb-2">
-            შესვლა საჭიროა
+            {t('sell.login_required')}
           </h2>
           <p className="text-zinc-400 mb-6">
-            ბილეთის გასაყიდად გთხოვთ შეხვიდეთ ანგარიშზე
+            {t('sell.login_required_desc')}
           </p>
           <Link href="/login" className="btn btn-primary">
-            შესვლა
+            {t('nav.login')}
             <ArrowRight className="w-4 h-4 ml-2" />
           </Link>
         </div>
@@ -191,7 +191,7 @@ export default function SellPage() {
               {t('sell.success')}
             </h2>
             <p className="text-zinc-400">
-              გადამისამართება...
+              {t('common.redirecting')}
             </p>
           </div>
         </div>
@@ -250,7 +250,7 @@ export default function SellPage() {
                 value={formData.event_name}
                 onChange={handleChange}
                 className="input"
-                placeholder="მაგ: ბასიანი - გაზაფხულის წვეულება"
+                placeholder={t('sell.example_event')}
                 required
               />
             </div>
@@ -283,7 +283,7 @@ export default function SellPage() {
                   value={formData.venue}
                   onChange={handleChange}
                   className="input"
-                  placeholder="მაგ: ბასიანი, თბილისი"
+                  placeholder={t('sell.example_venue')}
                   required
                 />
               </div>
@@ -377,7 +377,7 @@ export default function SellPage() {
                 value={formData.description || ''}
                 onChange={handleChange}
                 className="input min-h-[100px] resize-none"
-                placeholder="დამატებითი ინფორმაცია..."
+                placeholder={t('sell.additional_info')}
               />
             </div>
 
@@ -409,8 +409,8 @@ export default function SellPage() {
                     <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center mx-auto mb-3">
                       <Upload className="w-6 h-6 text-zinc-500" />
                     </div>
-                    <p className="text-zinc-400">დააწკაპუნეთ ან გადმოიტანეთ ფაილი</p>
-                    <p className="text-xs text-zinc-600 mt-1">PNG, JPG, PDF (მაქს. 5MB)</p>
+                    <p className="text-zinc-400">{t('sell.upload_click')}</p>
+                    <p className="text-xs text-zinc-600 mt-1">{t('sell.upload_formats')}</p>
                   </>
                 )}
               </div>

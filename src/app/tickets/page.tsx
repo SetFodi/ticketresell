@@ -106,7 +106,7 @@ export default function TicketsPage() {
             </h1>
           </div>
           <p className="text-zinc-400 mb-8">
-            იპოვე და შეიძინე ბილეთები უსაფრთხოდ
+            {t('tickets.subtitle')}
           </p>
 
           {/* Search & Filters */}
@@ -131,9 +131,9 @@ export default function TicketsPage() {
                 onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
                 className="input pl-12 w-full md:w-48 appearance-none cursor-pointer"
               >
-                <option value="recent">ახალი</option>
-                <option value="date">თარიღით</option>
-                <option value="price">ფასით</option>
+                <option value="recent">{t('tickets.sort.recent')}</option>
+                <option value="date">{t('tickets.sort.date')}</option>
+                <option value="price">{t('tickets.sort.price')}</option>
               </select>
             </div>
           </div>
@@ -167,7 +167,7 @@ export default function TicketsPage() {
               </div>
               <div className="absolute inset-0 rounded-2xl bg-[#c4f135] blur-2xl opacity-20 animate-pulse" />
             </div>
-            <p className="text-zinc-500 mt-4">იტვირთება...</p>
+            <p className="text-zinc-500 mt-4">{t('common.loading')}</p>
           </div>
         ) : filteredTickets.length === 0 ? (
           <div className="text-center py-20">
@@ -181,7 +181,7 @@ export default function TicketsPage() {
               {t('tickets.no_results')}
             </h3>
             <p className="text-zinc-500">
-              სცადეთ სხვა ძიება ან ფილტრი
+              {t('tickets.try_other')}
             </p>
           </div>
         ) : (
@@ -190,7 +190,7 @@ export default function TicketsPage() {
             <div className="flex items-center gap-2 mb-6">
               <Sparkles className="w-4 h-4 text-[#c4f135]" />
               <span className="text-sm text-zinc-400">
-                ნაპოვნია <span className="text-white font-medium">{filteredTickets.length}</span> ბილეთი
+                {t('tickets.found')} <span className="text-white font-medium">{filteredTickets.length}</span> {t('common.tickets')}
               </span>
             </div>
 

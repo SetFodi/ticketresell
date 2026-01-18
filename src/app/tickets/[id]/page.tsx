@@ -124,10 +124,10 @@ export default function TicketDetailPage() {
           <div className="w-20 h-20 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-6">
             <AlertCircle className="w-10 h-10 text-zinc-500" />
           </div>
-          <h2 className="text-2xl font-bold text-white mb-3">ბილეთი ვერ მოიძებნა</h2>
+          <h2 className="text-2xl font-bold text-white mb-3">{t('ticket.not_found')}</h2>
           <Link href="/tickets" className="text-[#c4f135] hover:underline inline-flex items-center gap-2">
             <ArrowLeft className="w-4 h-4" />
-            უკან დაბრუნება
+            {t('ticket.return')}
           </Link>
         </div>
       </div>
@@ -174,14 +174,13 @@ export default function TicketDetailPage() {
               {/* Status Badge */}
               {ticket.status !== 'available' && (
                 <div className="mb-4">
-                  <span className={`badge ${
-                    ticket.status === 'sold' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
+                  <span className={`badge ${ticket.status === 'sold' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
                     ticket.status === 'pending' ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20' :
-                    'badge-secondary'
-                  }`}>
-                    {ticket.status === 'sold' && 'გაყიდული'}
-                    {ticket.status === 'pending' && 'მოლოდინში'}
-                    {ticket.status === 'completed' && 'დასრულებული'}
+                      'badge-secondary'
+                    }`}>
+                    {ticket.status === 'sold' && t('ticket.status.sold')}
+                    {ticket.status === 'pending' && t('ticket.status.pending')}
+                    {ticket.status === 'completed' && t('ticket.status.completed')}
                   </span>
                 </div>
               )}
@@ -220,7 +219,7 @@ export default function TicketDetailPage() {
                 </div>
                 <div>
                   <div className="text-xs text-zinc-500 uppercase tracking-wider mb-1">{t('ticket.quantity')}</div>
-                  <div className="text-white font-medium">{ticket.quantity} ბილეთი</div>
+                  <div className="text-white font-medium">{ticket.quantity} {t('common.tickets')}</div>
                 </div>
                 <div>
                   <div className="text-xs text-zinc-500 uppercase tracking-wider mb-1">{t('ticket.listed')}</div>
@@ -233,7 +232,7 @@ export default function TicketDetailPage() {
 
               {ticket.description && (
                 <div className="mt-6">
-                  <h3 className="font-medium text-white mb-2">აღწერა</h3>
+                  <h3 className="font-medium text-white mb-2">{t('ticket.description')}</h3>
                   <p className="text-zinc-400 leading-relaxed">{ticket.description}</p>
                 </div>
               )}
@@ -264,7 +263,7 @@ export default function TicketDetailPage() {
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <span className="font-medium text-white text-lg">
-                        {ticket.seller.full_name || 'გამყიდველი'}
+                        {ticket.seller.full_name || t('ticket.seller')}
                       </span>
                       {ticket.seller.is_verified_seller && (
                         <VerificationBadge size="sm" />
@@ -274,7 +273,7 @@ export default function TicketDetailPage() {
                       <div className="flex items-center gap-1.5">
                         <div className="w-2 h-2 rounded-full bg-[#c4f135]" />
                         <span className="text-sm text-zinc-400">
-                          {ticket.seller.reputation_score}% რეპუტაცია
+                          {ticket.seller.reputation_score}% {t('ticket.reputation')}
                         </span>
                       </div>
                     </div>
@@ -307,11 +306,10 @@ export default function TicketDetailPage() {
                 {/* Price Change Indicator */}
                 {priceDiffPercent !== 0 && (
                   <div
-                    className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-sm font-bold mt-2 ${
-                      priceIncrease
-                        ? 'bg-red-500/10 text-red-400'
-                        : 'bg-green-500/10 text-green-400'
-                    }`}
+                    className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-sm font-bold mt-2 ${priceIncrease
+                      ? 'bg-red-500/10 text-red-400'
+                      : 'bg-green-500/10 text-green-400'
+                      }`}
                   >
                     {priceIncrease ? (
                       <TrendingUp className="w-4 h-4" />
@@ -320,7 +318,7 @@ export default function TicketDetailPage() {
                     )}
                     {priceIncrease ? '+' : ''}{priceDiffPercent}%
                     {' '}
-                    {priceIncrease ? 'მეტი' : 'ნაკლები'}
+                    {priceIncrease ? t('ticket.price_higher') : t('ticket.price_lower')}
                   </div>
                 )}
               </div>
@@ -330,8 +328,8 @@ export default function TicketDetailPage() {
                 <div className="flex items-center gap-3 p-4 bg-[#c4f135]/10 border border-[#c4f135]/20 rounded-xl mb-6">
                   <Shield className="w-6 h-6 text-[#c4f135]" />
                   <div>
-                    <span className="text-sm font-medium text-[#c4f135]">ვერიფიცირებული გამყიდველი</span>
-                    <p className="text-xs text-zinc-500">თანხა დაცულია</p>
+                    <span className="text-sm font-medium text-[#c4f135]">{t('ticket.verified_seller_badge')}</span>
+                    <p className="text-xs text-zinc-500">{t('ticket.money_protected')}</p>
                   </div>
                 </div>
               )}
@@ -342,17 +340,17 @@ export default function TicketDetailPage() {
                   href="/login"
                   className="btn btn-primary w-full justify-center py-3.5"
                 >
-                  შედი ყიდვისთვის
+                  {t('ticket.login_to_buy')}
                 </Link>
               ) : isOwner ? (
                 <div className="text-center text-zinc-500 py-4 px-4 rounded-xl bg-white/5 border border-white/5">
                   <TicketIcon className="w-6 h-6 mx-auto mb-2 text-zinc-600" />
-                  ეს თქვენი განცხადებაა
+                  {t('ticket.your_listing')}
                 </div>
               ) : ticket.status !== 'available' ? (
                 <div className="text-center text-zinc-500 py-4 px-4 rounded-xl bg-white/5 border border-white/5">
                   <AlertCircle className="w-6 h-6 mx-auto mb-2 text-zinc-600" />
-                  ბილეთი მიუწვდომელია
+                  {t('ticket.unavailable')}
                 </div>
               ) : (
                 <button
@@ -373,7 +371,7 @@ export default function TicketDetailPage() {
 
               {canPurchase && (
                 <p className="text-xs text-zinc-600 text-center mt-4">
-                  ყიდვის შემდეგ მიიღებთ გამყიდველის საკონტაქტო ინფორმაციას
+                  {t('ticket.buy_confirm')}
                 </p>
               )}
             </div>
@@ -393,7 +391,7 @@ export default function TicketDetailPage() {
                 </div>
 
                 <h3 className="text-xl font-bold text-white text-center mb-6">
-                  ბილეთის ყიდვა
+                  {t('ticket.buy_ticket')}
                 </h3>
 
                 <div className="bg-white/5 border border-white/10 rounded-xl p-4 mb-6">
@@ -411,19 +409,19 @@ export default function TicketDetailPage() {
                   <div className="flex items-start gap-3">
                     <CheckCircle className="w-5 h-5 text-[#00f5d4] flex-shrink-0 mt-0.5" />
                     <p className="text-sm text-zinc-400">
-                      ყიდვის დადასტურების შემდეგ თქვენ მიიღებთ გამყიდველის საბანკო რეკვიზიტებს
+                      {t('ticket.buy_step1')}
                     </p>
                   </div>
                   <div className="flex items-start gap-3">
                     <CheckCircle className="w-5 h-5 text-[#00f5d4] flex-shrink-0 mt-0.5" />
                     <p className="text-sm text-zinc-400">
-                      გადახდის შემდეგ ატვირთეთ გადარიცხვის დამადასტურებელი
+                      {t('ticket.buy_step2')}
                     </p>
                   </div>
                   <div className="flex items-start gap-3">
                     <Shield className="w-5 h-5 text-[#c4f135] flex-shrink-0 mt-0.5" />
                     <p className="text-sm text-[#c4f135]">
-                      თანხა დაცულია სანამ არ მიიღებთ ბილეთს
+                      {t('ticket.buy_step3')}
                     </p>
                   </div>
                 </div>
@@ -433,7 +431,7 @@ export default function TicketDetailPage() {
                     onClick={() => setShowBuyModal(false)}
                     className="btn btn-secondary flex-1"
                   >
-                    გაუქმება
+                    {t('common.cancel')}
                   </button>
                   <button
                     onClick={handlePurchase}
@@ -443,7 +441,7 @@ export default function TicketDetailPage() {
                     {purchasing ? (
                       <Loader2 className="w-5 h-5 animate-spin" />
                     ) : (
-                      'დადასტურება'
+                      t('common.confirm')
                     )}
                   </button>
                 </div>

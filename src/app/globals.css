@@ -108,7 +108,13 @@ body::before {
   }
 
   .btn-outline {
-    @apply border-2 border-[--electric-lime] text-[--electric-lime] bg-transparent hover:bg-[--electric-lime]/10;
+    @apply border-2 bg-transparent;
+    border-color: var(--electric-lime);
+    color: var(--electric-lime);
+  }
+
+  .btn-outline:hover {
+    background-color: rgba(196, 241, 53, 0.1);
   }
 
   .btn-ghost {
@@ -176,7 +182,8 @@ body::before {
   }
 
   .input:focus {
-    @apply outline-none border-[--electric-lime]/50 bg-white/[0.08];
+    @apply outline-none bg-white/[0.08];
+    border-color: rgba(196, 241, 53, 0.5);
     box-shadow: 0 0 0 3px rgba(196, 241, 53, 0.1), 0 0 20px rgba(196, 241, 53, 0.1);
   }
 

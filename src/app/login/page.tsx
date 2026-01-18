@@ -40,7 +40,7 @@ export default function LoginPage() {
     const cleanPhone = phone.replace(/\s/g, '')
 
     if (!isValidPhone(cleanPhone)) {
-      setError('გთხოვთ შეიყვანოთ სწორი ტელეფონის ნომერი (+995XXXXXXXXX)')
+      setError(t('auth.invalid_phone'))
       return
     }
 
@@ -63,7 +63,7 @@ export default function LoginPage() {
     setError(null)
 
     if (otp.length !== 6) {
-      setError('გთხოვთ შეიყვანოთ 6-ციფრიანი კოდი')
+      setError(t('auth.invalid_otp'))
       return
     }
 
@@ -152,7 +152,7 @@ export default function LoginPage() {
           className="inline-flex items-center gap-2 text-zinc-500 hover:text-white mb-8 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          მთავარზე დაბრუნება
+          {t('auth.back_home')}
         </Link>
 
         <div className="card p-8 relative overflow-hidden">
@@ -213,9 +213,9 @@ export default function LoginPage() {
               </form>
 
               <p className="text-xs text-zinc-600 text-center mt-8">
-                გაგრძელებით თქვენ ეთანხმებით ჩვენს{' '}
+                {t('auth.terms_agree')}{' '}
                 <a href="/terms" className="text-[#c4f135] hover:underline">
-                  წესებსა და პირობებს
+                  {t('auth.terms')}
                 </a>
               </p>
             </div>
@@ -227,7 +227,7 @@ export default function LoginPage() {
                 </div>
 
                 <h1 className="text-2xl font-bold text-white mb-2">
-                  კოდის დადასტურება
+                  {t('auth.verify_code')}
                 </h1>
                 <p className="text-zinc-400">
                   {t('auth.otp_sent')}
@@ -275,13 +275,13 @@ export default function LoginPage() {
                   onClick={() => setStep('phone')}
                   className="text-sm text-zinc-500 hover:text-white transition-colors"
                 >
-                  ← ნომრის შეცვლა
+                  ← {t('auth.change_number')}
                 </button>
 
                 <div>
                   {countdown > 0 ? (
                     <p className="text-sm text-zinc-600">
-                      ხელახლა გაგზავნა <span className="text-[#c4f135] font-mono">{countdown}</span> წამში
+                      {t('auth.resend_in')} <span className="text-[#c4f135] font-mono">{countdown}</span> {t('auth.seconds')}
                     </p>
                   ) : (
                     <button
@@ -289,7 +289,7 @@ export default function LoginPage() {
                       disabled={loading}
                       className="text-sm text-[#c4f135] hover:underline"
                     >
-                      კოდის ხელახლა გაგზავნა
+                      {t('auth.resend_code')}
                     </button>
                   )}
                 </div>

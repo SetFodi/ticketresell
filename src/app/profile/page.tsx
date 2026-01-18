@@ -135,28 +135,28 @@ export default function ProfilePage() {
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
             <Clock className="w-3 h-3" />
-            მოლოდინში
+            {t('profile.status.pending')}
           </span>
         )
       case 'paid':
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium bg-[#c4f135]/10 text-[#c4f135] border border-[#c4f135]/20">
             <CheckCircle className="w-3 h-3" />
-            გადახდილი
+            {t('profile.status.paid')}
           </span>
         )
       case 'released':
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium bg-green-500/10 text-green-400 border border-green-500/20">
             <CheckCircle className="w-3 h-3" />
-            დასრულებული
+            {t('profile.status.released')}
           </span>
         )
       case 'refunded':
         return (
           <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium bg-red-500/10 text-red-400 border border-red-500/20">
             <XCircle className="w-3 h-3" />
-            დაბრუნებული
+            {t('profile.status.refunded')}
           </span>
         )
       default:
@@ -206,7 +206,7 @@ export default function ProfilePage() {
                       type="text"
                       value={newName}
                       onChange={(e) => setNewName(e.target.value)}
-                      placeholder="თქვენი სახელი"
+                      placeholder={t('profile.your_name')}
                       className="input py-2 px-3 w-48"
                       autoFocus
                     />
@@ -214,19 +214,19 @@ export default function ProfilePage() {
                       onClick={handleUpdateName}
                       className="btn btn-primary btn-sm"
                     >
-                      შენახვა
+                      {t('common.save')}
                     </button>
                     <button
                       onClick={() => setEditingName(false)}
                       className="btn btn-secondary btn-sm"
                     >
-                      გაუქმება
+                      {t('common.cancel')}
                     </button>
                   </div>
                 ) : (
                   <>
                     <h1 className="text-2xl font-bold text-white">
-                      {user.full_name || 'მომხმარებელი'}
+                      {user.full_name || t('common.user')}
                     </h1>
                     <button
                       onClick={() => {
@@ -257,7 +257,7 @@ export default function ProfilePage() {
                 )}
                 <div className="flex items-center gap-1.5">
                   <Star className="w-4 h-4 text-yellow-500" />
-                  <span>რეპუტაცია: <span className="text-white font-medium">{user.reputation_score}%</span></span>
+                  <span>{t('profile.reputation_label')}: <span className="text-white font-medium">{user.reputation_score}%</span></span>
                 </div>
               </div>
             </div>
@@ -274,16 +274,16 @@ export default function ProfilePage() {
                 </div>
                 <div className="flex-1">
                   <h3 className="font-semibold text-white mb-1">
-                    გახდი ვერიფიცირებული გამყიდველი
+                    {t('profile.become_verified')}
                   </h3>
                   <p className="text-sm text-zinc-400 mb-3">
-                    ვერიფიცირებული გამყიდველებს აქვთ მეტი ნდობა და მეტი გაყიდვები
+                    {t('profile.verified_benefit')}
                   </p>
                   <Link
                     href="/profile/verify"
                     className="btn btn-primary btn-sm group"
                   >
-                    ვერიფიკაცია
+                    {t('profile.verification')}
                     <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </div>
@@ -296,33 +296,29 @@ export default function ProfilePage() {
         <div className="flex gap-2 mb-6">
           <button
             onClick={() => setTab('listings')}
-            className={`flex items-center gap-2 px-5 py-3 rounded-xl font-medium transition-all duration-300 ${
-              tab === 'listings'
+            className={`flex items-center gap-2 px-5 py-3 rounded-xl font-medium transition-all duration-300 ${tab === 'listings'
                 ? 'bg-[#c4f135] text-[#050507] shadow-lg shadow-[#c4f135]/20'
                 : 'bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-white border border-white/10'
-            }`}
+              }`}
           >
             <TicketIcon className="w-5 h-5" />
             {t('profile.my_tickets')}
-            <span className={`ml-1 px-2 py-0.5 rounded-md text-xs ${
-              tab === 'listings' ? 'bg-[#050507]/20' : 'bg-white/10'
-            }`}>
+            <span className={`ml-1 px-2 py-0.5 rounded-md text-xs ${tab === 'listings' ? 'bg-[#050507]/20' : 'bg-white/10'
+              }`}>
               {myTickets.length}
             </span>
           </button>
           <button
             onClick={() => setTab('purchases')}
-            className={`flex items-center gap-2 px-5 py-3 rounded-xl font-medium transition-all duration-300 ${
-              tab === 'purchases'
+            className={`flex items-center gap-2 px-5 py-3 rounded-xl font-medium transition-all duration-300 ${tab === 'purchases'
                 ? 'bg-[#c4f135] text-[#050507] shadow-lg shadow-[#c4f135]/20'
                 : 'bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-white border border-white/10'
-            }`}
+              }`}
           >
             <ShoppingBag className="w-5 h-5" />
             {t('profile.my_purchases')}
-            <span className={`ml-1 px-2 py-0.5 rounded-md text-xs ${
-              tab === 'purchases' ? 'bg-[#050507]/20' : 'bg-white/10'
-            }`}>
+            <span className={`ml-1 px-2 py-0.5 rounded-md text-xs ${tab === 'purchases' ? 'bg-[#050507]/20' : 'bg-white/10'
+              }`}>
               {myPurchases.length}
             </span>
           </button>
@@ -348,14 +344,14 @@ export default function ProfilePage() {
                     <TicketIcon className="w-8 h-8 text-zinc-600" />
                   </div>
                   <h3 className="text-lg font-semibold text-white mb-2">
-                    ჯერ არ გაქვთ განცხადებები
+                    {t('profile.no_listings')}
                   </h3>
                   <p className="text-zinc-500 mb-6">
-                    გამოაქვეყნეთ თქვენი პირველი ბილეთი
+                    {t('profile.publish_first')}
                   </p>
                   <Link href="/sell" className="btn btn-primary group">
                     <Plus className="w-5 h-5 mr-2" />
-                    ბილეთის გამოქვეყნება
+                    {t('profile.publish_ticket')}
                     <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </div>
@@ -379,13 +375,13 @@ export default function ProfilePage() {
                     <ShoppingBag className="w-8 h-8 text-zinc-600" />
                   </div>
                   <h3 className="text-lg font-semibold text-white mb-2">
-                    ჯერ არ გაქვთ შენაძენები
+                    {t('profile.no_purchases')}
                   </h3>
                   <p className="text-zinc-500 mb-6">
-                    იპოვეთ თქვენთვის სასურველი ბილეთი
+                    {t('profile.find_ticket')}
                   </p>
                   <Link href="/tickets" className="btn btn-primary group">
-                    ბილეთების ნახვა
+                    {t('profile.view_tickets')}
                     <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </div>

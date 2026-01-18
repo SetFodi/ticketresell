@@ -12,15 +12,10 @@ import {
   Loader2,
   ChevronRight,
   Search,
-  Filter,
   CheckCircle,
   XCircle,
   Clock,
-  Eye,
 } from 'lucide-react'
-
-// Hardcoded admin IDs for MVP - replace with proper role system later
-const ADMIN_IDS = ['YOUR_ADMIN_USER_ID_HERE']
 
 export default function AdminDisputesPage() {
   const router = useRouter()
@@ -31,8 +26,8 @@ export default function AdminDisputesPage() {
 
   const supabase = createClient()
 
-  // Simple admin check - replace with proper RBAC later
-  const isAdmin = user && ADMIN_IDS.includes(user.id)
+  // Admin check using database is_admin field
+  const isAdmin = user?.is_admin === true
 
   useEffect(() => {
     if (!authLoading && !isAdmin) {
